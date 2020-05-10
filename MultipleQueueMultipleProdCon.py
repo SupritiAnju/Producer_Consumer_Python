@@ -1,6 +1,5 @@
  '''
- Create task3 as consumer2 which reads cons1 sent data Here
-Task2 acts like producer and consumer both
+ Example to send file object through queue and consumer will process the file object received i.e basically a json file 
 '''
 import json
 import concurrent.futures
