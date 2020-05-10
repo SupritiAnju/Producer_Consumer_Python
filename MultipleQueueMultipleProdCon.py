@@ -10,6 +10,8 @@ import random
 import threading
 import time
 
+#Sample data of data2.json
+'''
 data = {}
 data['people'] = []
 data['people'].append({
@@ -29,7 +31,7 @@ data['people'].append({
 })
 with open('data2.json', 'w') as outfile:
     json.dump(data, outfile)
-
+'''
 def dataParser(need_parse):
   new_data = {}
   print("parsing data")
@@ -55,9 +57,9 @@ def producer(queue, event):
       # queue.put(filename)#queue.put(message)
     logging.info("Producer received event. Exiting")
 
-def consumer1(queue1,queue2, event):
+def consumer1(queue1, event):
     """Pretend we're saving a number in the database."""
-    while not event.is_set() or not queue.empty():
+    while not event.is_set() or not queue1.empty():
         message = queue1.get()
         print("\ncon1: here0")
         logging.info("Consumer1 storing message: %s (size=%d)", message, queue1.qsize())
@@ -67,12 +69,13 @@ def consumer1(queue1,queue2, event):
           data_json = json.dumps(message)
           print("\ncon1: here2")
           print(data_json)
-          message2 = DataParser(data_json)
+          pasredata = DataParser(data_json)
+          print(parsedata)
           print("\ncon1: here3")
           #message2 = random.randint(1, 101)
-          logging.info("Consumer1 sending message:%s", message2)
-          queue2.put(message2)
-          print("\ncon1: here4")
+          #logging.info("Consumer1 sending message:%s", message2)
+          #queue2.put(message2)
+          #print("\ncon1: here4")
     logging.info("Consumer1 received event. Exiting")
 
 def consumer2(queue, event):
@@ -93,13 +96,13 @@ if __name__ == "__main__":
                         datefmt="%H:%M:%S")
 
     pipeline1 = queue.Queue(maxsize=10)
-    pipeline2 = queue.Queue(maxsize=5)
+    #pipeline2 = queue.Queue(maxsize=5)
     
     event = threading.Event()
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
         executor.submit(producer, pipeline1, event)
-        executor.submit(consumer1, pipeline1,pipeline2, event)
-        executor.submit(consumer2, pipeline2, event)
+        executor.submit(consumer1, pipeline1, event)
+        #executor.submit(consumer2, pipeline2, event)
 
         time.sleep(0.1)
         logging.info("Main: about to set event")
